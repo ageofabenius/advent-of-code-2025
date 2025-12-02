@@ -123,8 +123,55 @@ const fn do_the_thing(lines: &[&str]) -> i32 {
 }
 const ANSWER: i32 = do_the_thing(&INPUT_LINES);
 
+fn do_the_second_thing(lines: &[&str]) -> i32 {
+    let mut position = 50;
+
+    let mut count_of_zeroes = 0;
+
+    let mut i = 0;
+    while i < lines.len() {
+        let starting_position = position;
+        // Apply rotation to position
+        let rotation = parse_rotation(lines[i]);
+        position += rotation;
+        let computed_position = position;
+
+        let times_crossed_zero = if position > 99 {
+            position / 100
+        } else if position < 0 {
+            (position / 100 * -1) + 1
+        } else if position == 0 {
+            1
+        } else {
+            0
+        };
+
+        count_of_zeroes += times_crossed_zero;
+
+        // Adjust position to be from -99 to 99
+        position = position % 100;
+        // Adjust position to be from 0 to 99
+        if position < 0 {
+            position += 100;
+        }
+        let adjusted_position = position;
+
+        println!(
+            "starting_position: {starting_position}, rotation: {rotation}, computed_position: {computed_position}, adjusted_position: {adjusted_position}, times_crossed_zero: {times_crossed_zero}"
+        );
+
+        i += 1;
+    }
+
+    count_of_zeroes
+}
+
+// const SECOND_ANSWER: i32 = do_the_second_thing(&INPUT_LINES);
+
 fn main() {
     println!("ANSWER: {ANSWER}");
+    // println!("SECOND_ANSWER: {SECOND_ANSWER}");
+    println!("SECOND_ANSWER: {}", do_the_second_thing(&INPUT_LINES));
 }
 
 #[cfg(test)]
@@ -156,6 +203,54 @@ mod tests {
                 "R27", "R13", "L8", "R30", "R22", "L9", "L32", "R22", "R20", "R16",
             ]),
             2
+        );
+    }
+
+    #[test]
+    fn test_do_the_second_thing() {
+        assert_eq!(do_the_second_thing(&["R50"]), 1);
+        assert_eq!(do_the_second_thing(&["R51"]), 1);
+        assert_eq!(do_the_second_thing(&["R149"]), 1);
+        assert_eq!(do_the_second_thing(&["R150"]), 2);
+        assert_eq!(do_the_second_thing(&["R151"]), 2);
+        assert_eq!(do_the_second_thing(&["R500"]), 5);
+        assert_eq!(do_the_second_thing(&["R450"]), 5);
+
+        assert_eq!(do_the_second_thing(&["L49"]), 0);
+        assert_eq!(do_the_second_thing(&["L50"]), 1);
+        assert_eq!(do_the_second_thing(&["L51"]), 1);
+        assert_eq!(do_the_second_thing(&["L149"]), 1);
+        assert_eq!(do_the_second_thing(&["L150"]), 2);
+        assert_eq!(do_the_second_thing(&["L151"]), 2);
+        assert_eq!(do_the_second_thing(&["L500"]), 5);
+        assert_eq!(do_the_second_thing(&["L450"]), 5);
+
+        assert_eq!(
+            do_the_second_thing(&[
+                "R27", "R13", "L8", "R30", "R22", "L9", "L32", "R22", "R20", "R16",
+            ]),
+            3
+        );
+
+        assert_eq!(
+            do_the_second_thing(&[
+                "R27", "R13", "L8", "R30", "L288", "R22", "L9", "L32", "R22", "R20", "R16",
+            ]),
+            4
+        );
+
+        assert_eq!(
+            do_the_second_thing(&[
+                "R27", "R13", "L8", "R30", "R22", "L9", "L32", "R22", "R20", "R16", "R1000",
+            ]),
+            13
+        );
+
+        assert_eq!(
+            do_the_second_thing(&[
+                "R27", "R13", "L8", "R30", "R22", "L9", "L32", "R22", "R20", "R16", "L1000",
+            ]),
+            13
         );
     }
 }
