@@ -1,2 +1,6 @@
 [workspace]
-members = ["days/day_1"]
+members = ["const_utils","days/day_1", "days/day_2"]
+
+[workspace.dependencies]
+const_utils = { version = "0.1.0", path = "const_utils" }
+rstest = "0.26.1"
