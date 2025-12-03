@@ -4,5 +4,5 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-const_utils = { workspace = true }
-rstest = { workspace = true }
+const_utils.workspace = true
+rstest.workspace = true

@@ -1,4 +1,4 @@
-use const_utils::load_file_and_split_text;
+use const_utils::{load_file_and_split_text, number_parsing::parse_usize};
 
 load_file_and_split_text!("../input.txt", '\n');
 
@@ -9,27 +9,9 @@ const fn parse_rotation(s: &str) -> isize {
         b'R' => 1,
         _ => unreachable!(),
     };
-    let number: isize = parse_isize(bytes, Some(1));
+    let number: isize = parse_usize(bytes, Some(1), None) as isize;
 
     sign * number
-}
-
-const fn parse_isize(bytes: &[u8], offset: Option<usize>) -> isize {
-    let mut number: isize = 0;
-    let mut i: usize = if let Some(i) = offset { i } else { 0 };
-    while i < bytes.len() {
-        let byte: u8 = bytes[i];
-
-        // Since this is ASCII, we can take the byte character's value and slide
-        // it over by the value for ASCII 0
-        let digit = (byte - b'0') as isize;
-
-        number = (number * 10) + digit;
-
-        i += 1;
-    }
-
-    number
 }
 
 const fn part_1(lines: &[&str]) -> isize {
@@ -134,13 +116,6 @@ mod tests {
     use rstest::rstest;
 
     use super::*;
-
-    #[test]
-    fn test_parse_isize() {
-        assert_eq!(parse_isize(b"123", None), 123);
-        assert_eq!(parse_isize(b"0", None), 0);
-        assert_eq!(parse_isize(b"L999", Some(1)), 999);
-    }
 
     #[test]
     fn test_parse_rotation() {
