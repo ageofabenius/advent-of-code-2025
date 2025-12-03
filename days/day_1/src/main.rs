@@ -98,7 +98,7 @@ const fn parse_isize(bytes: &[u8], offset: Option<usize>) -> isize {
     number
 }
 
-const fn do_the_thing(lines: &[&str]) -> isize {
+const fn part_1(lines: &[&str]) -> isize {
     let mut position = 50;
 
     let mut count_of_zeroes = 0;
@@ -121,9 +121,9 @@ const fn do_the_thing(lines: &[&str]) -> isize {
 
     count_of_zeroes
 }
-const ANSWER: isize = do_the_thing(&INPUT_LINES);
+const PART_1_ANSWER: isize = part_1(&INPUT_LINES);
 
-fn do_the_second_thing(lines: &[&str]) -> isize {
+const fn part_2(lines: &[&str]) -> isize {
     let mut position = 50;
 
     let mut count_of_zeroes = 0;
@@ -145,12 +145,12 @@ fn do_the_second_thing(lines: &[&str]) -> isize {
 
 /// -> (ending_position, times_crossed_zero, times_stopped_at_zero)
 /// Here, 99 -> 100 (rolling to 0) is considered times_stopped_at_zero, not times_crossed_zero
-fn apply_rotation(starting_position: isize, rotation: isize) -> (isize, isize, isize) {
+const fn apply_rotation(starting_position: isize, rotation: isize) -> (isize, isize, isize) {
     // Determine the number of full rotations
-    let full_rotations = dbg!((rotation / 100).abs());
+    let full_rotations = (rotation / 100).abs();
 
     // We will apply the remaining rotation
-    let remaining_rotation = dbg!(rotation % 100);
+    let remaining_rotation = rotation % 100;
 
     if remaining_rotation == 0 {
         // We don't need to apply rotations, but we do need to account for
@@ -162,17 +162,15 @@ fn apply_rotation(starting_position: isize, rotation: isize) -> (isize, isize, i
         }
     }
 
-    let position_with_wrapping = dbg!(starting_position + remaining_rotation);
+    let position_with_wrapping = starting_position + remaining_rotation;
 
-    // assert!(position_with_wrapping < 199 && position_with_wrapping > -100);
-
-    let times_crossed_zero = dbg!(if position_with_wrapping > 100 {
+    let times_crossed_zero = if position_with_wrapping > 100 {
         1
     } else if (position_with_wrapping < 0) && (starting_position != 0) {
         1
     } else {
         0
-    });
+    };
 
     // Adjust position to be from -99 to 99
     let mut adjusted_position = position_with_wrapping % 100;
@@ -181,7 +179,7 @@ fn apply_rotation(starting_position: isize, rotation: isize) -> (isize, isize, i
         adjusted_position += 100;
     }
 
-    let times_stopped_at_zero = dbg!(if adjusted_position == 0 { 1 } else { 0 });
+    let times_stopped_at_zero = if adjusted_position == 0 { 1 } else { 0 };
 
     (
         adjusted_position,
@@ -190,12 +188,11 @@ fn apply_rotation(starting_position: isize, rotation: isize) -> (isize, isize, i
     )
 }
 
-// const SECOND_ANSWER: isize = do_the_second_thing(&INPUT_LINES);
+const PART_2_ANSWER: isize = part_2(&INPUT_LINES);
 
 fn main() {
-    // println!("ANSWER: {ANSWER}");
-    // println!("SECOND_ANSWER: {SECOND_ANSWER}");
-    println!("SECOND_ANSWER: {}", do_the_second_thing(&INPUT_LINES));
+    println!("PART_1_ANSWER: {PART_1_ANSWER}");
+    println!("PART_2_ANSWER: {PART_2_ANSWER}");
 }
 
 #[cfg(test)]
@@ -219,21 +216,21 @@ mod tests {
 
     #[test]
     fn test_do_the_thing() {
-        assert_eq!(do_the_thing(&["L50"]), 1);
-        assert_eq!(do_the_thing(&["R50"]), 1);
+        assert_eq!(part_1(&["L50"]), 1);
+        assert_eq!(part_1(&["R50"]), 1);
 
-        assert_eq!(do_the_thing(&["R50", "R100"]), 2);
+        assert_eq!(part_1(&["R50", "R100"]), 2);
     }
 
     #[test]
     fn test_do_the_second_thing() {
-        assert_eq!(do_the_second_thing(&["R50"]), 1);
-        assert_eq!(do_the_second_thing(&["R50", "R50"]), 1);
-        assert_eq!(do_the_second_thing(&["R50", "R50", "R50"]), 2);
+        assert_eq!(part_2(&["R50"]), 1);
+        assert_eq!(part_2(&["R50", "R50"]), 1);
+        assert_eq!(part_2(&["R50", "R50", "R50"]), 2);
 
-        assert_eq!(do_the_second_thing(&["L50"]), 1);
-        assert_eq!(do_the_second_thing(&["L50", "L50"]), 1);
-        assert_eq!(do_the_second_thing(&["L50", "L50", "L50"]), 2);
+        assert_eq!(part_2(&["L50"]), 1);
+        assert_eq!(part_2(&["L50", "L50"]), 1);
+        assert_eq!(part_2(&["L50", "L50", "L50"]), 2);
     }
 
     #[rstest]
