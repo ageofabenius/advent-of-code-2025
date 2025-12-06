@@ -113,6 +113,7 @@ const fn sum_repeating_digit_numbers_in_ranges(s: [&str; NUM_LINES]) -> usize {
 }
 
 fn main() {
+    #[allow(long_running_const_eval)]
     const PART_1_ANSWER: usize = sum_repeating_digit_numbers_in_ranges(INPUT_LINES);
     println!("PART_1_ANSWER: {}", PART_1_ANSWER);
 }
